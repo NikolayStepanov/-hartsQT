@@ -20,16 +20,16 @@ public:
     ~MainWindow();
 
 protected:
-    void paintEvent(QPaintEvent *pEvent) override;
-    void resizeEvent(QResizeEvent *pEvent) override;
+    void closeEvent( QCloseEvent* event ) override;
 
 public slots:
     void openAboutProgram();
     void openSetupDialog();
+    void refreshChartWidgets();
 
 private:
     Ui::MainWindow *ui;
-    SetupDialog * setupDialog;
+    SetupDialog * m_setupDialog;
     ChartWidget * m_chart1;
     ChartWidget * m_chart2;
 };

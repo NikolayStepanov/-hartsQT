@@ -17,7 +17,20 @@ class SetupDialog : public QDialog
 public:
     explicit SetupDialog(QWidget *parent = nullptr);
     ~SetupDialog();
+    QVector<size_t> getValuesChart();
+
+protected:
+    void closeEvent( QCloseEvent* event ) override;
+
+private:
     void setValuesChartDefault();
+
+private slots:
+    void refreshVectorIntegers();
+    void previousValuesChart();
+
+signals:
+    void valuesChartChanged();
 
 private:
     Ui::SetupDialog *ui;
@@ -26,6 +39,8 @@ private:
     QPushButton *m_cancelPushButton;
     QVBoxLayout *layoutV;
     QHBoxLayout *layoutH;
+
+    QVector<size_t> m_vectorIntegers;
 };
 
 #endif // SETUPDIALOG_H

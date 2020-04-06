@@ -4,26 +4,28 @@
 ChartWidget::ChartWidget(QWidget *parent, QVector<size_t> vector) : QWidget(parent),
     m_vectorIntegers(vector)
 {
-    //Data
 }
 
-void ChartWidget::paintEvent(QPaintEvent *pEvent)
+void ChartWidget::setValuesChart(QVector<size_t> vector)
 {
-    QPainter painter(this);
-    painter.drawPixmap(0,0,m_pixmap);
+    m_vectorIntegers = vector;
+    drawChart();
 }
 
-void ChartWidget::resizeEvent(QResizeEvent *pEvent)
+void ChartWidget::drawChart()
 {
-    m_pixmap = QPixmap(pEvent->size());
     m_pixmap.fill(Qt::white);
 
     size_t heightPixmap = m_pixmap.height();
     size_t widthPixmap = m_pixmap.width();
 
-    size_t textHeightMax = heightPixmap * 0.1;
-    size_t maxHeightColumn = heightPixmap * 0.9;
-    size_t widthColumn = widthPixmap / m_vectorIntegers.size();
+    double textHeightMax = heightPixmap * 0.1;
+    double maxHeightColumn = heightPixmap * 0.9;
+    size_t widthColumn =0;
+    if(m_vectorIntegers.size()!=0)
+    {
+        widthColumn = widthPixmap / m_vectorIntegers.size();
+    }
 
     size_t maxValVector = *std::max_element(m_vectorIntegers.begin(), m_vectorIntegers.end());
     double columnProportionWidth = maxHeightColumn/maxValVector;
@@ -55,4 +57,16 @@ void ChartWidget::resizeEvent(QResizeEvent *pEvent)
         xCol+=widthColumn;
 
     }
+}
+
+void ChartWidget::paintEvent(QPaintEvent *pEvent)
+{
+    QPainter painter(this);
+    painter.drawPixmap(0,0,m_pixmap);
+}
+
+void ChartWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    m_pixmap = QPixmap(pEvent->size());
+    drawChart();
 }

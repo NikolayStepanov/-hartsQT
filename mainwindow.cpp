@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //Setup Dialog
-    setupDialog = new SetupDialog();
+    m_setupDialog = new SetupDialog();
 
     //Menu
     QMenu *pMenuFile = menuBar()->addMenu(tr("&File"));
@@ -25,10 +25,12 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *pActionEdit = pMenuEdit->addAction(tr("&Setting"),this, SLOT(openSetupDialog()),QKeySequence::fromString("R"));
     QAction *pActionAbout = pMenuHelp->addAction(tr("&About"),this, SLOT(openAboutProgram()),QKeySequence::HelpContents);
 
-    QVector<size_t>vectorIntegers ={1,4,2,7,8,2,4,10};
+    QVector<size_t>vectorIntegers = m_setupDialog->getValuesChart();
+
     m_chart1 = new ChartWidget(this,vectorIntegers);
     std::sort(vectorIntegers.begin(),vectorIntegers.end());
     m_chart2 = new ChartWidget(this,vectorIntegers);
+
     QVBoxLayout *layoutV = new QVBoxLayout;
     layoutV->addWidget(m_chart1);
     layoutV->addWidget(m_chart2);
@@ -38,21 +40,23 @@ MainWindow::MainWindow(QWidget *parent)
     window->setLayout(layoutV);
 
     setCentralWidget(window);
+
+    //connections
+    connect(m_setupDialog, SIGNAL(valuesChartChanged()),this,SLOT(refreshChartWidgets()));
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_chart1;
+    delete m_chart2;
+    delete m_setupDialog;
 }
 
-void MainWindow::paintEvent(QPaintEvent *pEvent)
+void MainWindow::closeEvent(QCloseEvent *event)
 {
-
-}
-
-void MainWindow::resizeEvent(QResizeEvent *pEvent)
-{
-
+    m_setupDialog->close();
 }
 
 void MainWindow::openAboutProgram()
@@ -69,6 +73,16 @@ void MainWindow::openAboutProgram()
 
 void MainWindow::openSetupDialog()
 {
-    setupDialog->show();
+    m_setupDialog->show();
+}
+
+void MainWindow::refreshChartWidgets()
+{
+    QVector<size_t> vector = m_setupDialog->getValuesChart();
+    m_chart1->setValuesChart(vector);
+    std::sort(vector.begin(),vector.end());
+    m_chart2->setValuesChart(vector);
+    m_chart1->update();
+    m_chart2->update();
 }
 

@@ -8,6 +8,10 @@ class ChartWidget : public QWidget
     Q_OBJECT
 public:
     explicit ChartWidget(QWidget *parent = nullptr, QVector<size_t> vector = {});
+    void setValuesChart(QVector<size_t> vector);
+
+private:
+    void drawChart();
 
 signals:
 
